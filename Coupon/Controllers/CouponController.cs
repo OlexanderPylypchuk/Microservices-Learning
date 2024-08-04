@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CouponAPI.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/coupon")]
 	[ApiController]
 	public class CouponController : ControllerBase
 	{
@@ -115,7 +115,7 @@ namespace CouponAPI.Controllers
 		{
 			try
 			{
-				Coupon coupon = _context.Coupons.First(u=>u.Id==couponDTO.Id);
+				Coupon coupon = _context.Coupons.First(u=>u.Id==id);
 				_context.Coupons.Remove(coupon);
 				_context.SaveChanges();
 				_responce.Success = true;
