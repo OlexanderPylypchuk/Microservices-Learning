@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CouponAPI", "Coupon\CouponAPI.csproj", "{C6041B95-64B6-4151-B905-761A615D26F0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Micro.Web", "Web\Micro.Web.csproj", "{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{C6041B95-64B6-4151-B905-761A615D26F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6041B95-64B6-4151-B905-761A615D26F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6041B95-64B6-4151-B905-761A615D26F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C6041B95-64B6-4151-B905-761A615D26F0} = {EB5F091A-3864-49B6-93F8-B6F826963054}
+		{2C6862E0-B5ED-46FA-A798-0B3C15D53B8B} = {F19EE6E7-CBDA-46AA-AE20-E41465F01393}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0BFE667-B039-43FB-B3E7-0DD8C783A5C3}

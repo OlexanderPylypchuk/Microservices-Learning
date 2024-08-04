@@ -111,7 +111,7 @@ namespace CouponAPI.Controllers
 			return _responce;
 		}
 		[HttpDelete]
-		public ResponceDTO Delete([FromBody] CouponDTO couponDTO)
+		public ResponceDTO Delete(int id)
 		{
 			try
 			{
