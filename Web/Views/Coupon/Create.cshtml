@@ -1,0 +1,36 @@
+﻿@model CouponDTO
+<form method="post">
+	<input asp-for="Id" hidden />
+	<div class="row m-3">
+		<div class="col-2">
+			<label asp-for="CouponCode"></label>
+		</div>
+		<div class="col-10">
+			<input asp-for="CouponCode" class="form-control" />
+			<span asp-validation-for="CouponCode" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row m-3">
+		<div class="col-2">
+			<label asp-for="DiscountAmount"></label>
+		</div>
+		<div class="col-10">
+			<input asp-for="DiscountAmount" class="form-control" />
+			<span asp-validation-for="DiscountAmount" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="row m-3">
+		<div class="col-2">
+			<label asp-for="MinAmount"></label>
+		</div>
+		<div class="col-10">
+			<input asp-for="MinAmount" class="form-control" />
+			<span asp-validation-for="MinAmount" class="text-danger"></span>
+		</div>
+	</div>
+	
+</form>
+
+@section Scripts{
+	<partial name="_ValidationScriptPartial" />
+}

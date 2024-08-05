@@ -1,0 +1,58 @@
+﻿@model List<CouponDTO>
+<div class="container m-0 p-0 card">
+	<div class="card-header">
+		<h1 class="text-center card-title">Coupon list</h1>
+	</div>
+	
+	<div class=" card-body row justify-content-center">
+		<div class="col-lg-10">
+			<a asp-action="Create" class="btn btn-success float-none float-md-end  my-3">Create new coupon</a>
+			<table class="table bg-light rounded-3">
+				<thead>
+					<tr>
+						<th>
+							Id
+						</th>
+						<th>
+							Coupon Code
+						</th>
+						<th>
+							Discount Amount
+						</th>
+						<th>
+							Minimal amount
+						</th>
+						<th>
+							
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach(var item in Model)
+					{
+						<tr>
+							<td>
+								@item.Id
+							</td>
+							<td>
+								@item.CouponCode
+							</td>
+							<td>
+								@item.DiscountAmount%
+							</td>
+							<td>
+								@item.MinAmount
+							</td>
+							<td>
+								<div class="btn-group" role="group" aria-label="update delete buttons">
+									<button type="button" class="btn btn-primary">Update</button>
+									<button type="button" class="btn btn-danger">Delete</button>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

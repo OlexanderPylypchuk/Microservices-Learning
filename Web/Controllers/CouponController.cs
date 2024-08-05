@@ -23,5 +23,18 @@ namespace Micro.Web.Controllers
 			}
 			return View(list);
 		}
+		public IActionResult Create()
+		{
+			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> Create(CouponDTO couponDTO)
+		{
+			if (ModelState.IsValid)
+			{
+				ResponceDTO? responceDTO = await _couponService.CreateAsync(couponDTO);
+			}
+			return RedirectToAction("Index");
+		}
 	}
 }
