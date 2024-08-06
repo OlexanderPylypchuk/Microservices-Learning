@@ -36,5 +36,30 @@ namespace Micro.Web.Controllers
 			}
 			return RedirectToAction("Index");
 		}
+		public async Task<IActionResult> Update(int id)
+		{
+			CouponDTO obj;
+			ResponceDTO? responceDTO = await _couponService.GetCouponByIdAsync(id);
+			if (responceDTO != null && responceDTO.Success)
+			{
+				obj = JsonConvert.DeserializeObject<CouponDTO>(Convert.ToString(responceDTO.Result));
+				return View(obj);
+			}
+			return RedirectToAction("Index");
+		}
+		[HttpPost]
+		public async Task<IActionResult> Update(CouponDTO couponDTO)
+		{
+			if (ModelState.IsValid)
+			{
+				ResponceDTO? responceDTO = await _couponService.UpdateAsync(couponDTO);
+			}
+			return RedirectToAction("Index");
+		}
+		public async Task<IActionResult> Delete(int id)
+		{
+			ResponceDTO? responceDTO = await _couponService.DeleteAsync(id);
+			return RedirectToAction("Index");
+		}
 	}
 }
