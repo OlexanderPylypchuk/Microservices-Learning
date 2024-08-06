@@ -21,6 +21,10 @@ namespace Micro.Web.Controllers
 			{
 				list = JsonConvert.DeserializeObject<List<CouponDTO>>(Convert.ToString(responceDTO.Result));
 			}
+			else
+			{
+				TempData["error"] = responceDTO.Message;
+			}
 			return View(list);
 		}
 		public IActionResult Create()
@@ -33,6 +37,14 @@ namespace Micro.Web.Controllers
 			if (ModelState.IsValid)
 			{
 				ResponceDTO? responceDTO = await _couponService.CreateAsync(couponDTO);
+				if (responceDTO != null && !responceDTO.Success)
+					TempData["error"] = responceDTO.Message;
+				else
+					TempData["success"] = "Created successfuly";
+			}
+			else
+			{
+				TempData["error"] = "Something wrong with model";
 			}
 			return RedirectToAction("Index");
 		}
@@ -45,6 +57,10 @@ namespace Micro.Web.Controllers
 				obj = JsonConvert.DeserializeObject<CouponDTO>(Convert.ToString(responceDTO.Result));
 				return View(obj);
 			}
+			else
+			{
+				TempData["error"] = responceDTO.Message;
+			}
 			return RedirectToAction("Index");
 		}
 		[HttpPost]
@@ -53,12 +69,21 @@ namespace Micro.Web.Controllers
 			if (ModelState.IsValid)
 			{
 				ResponceDTO? responceDTO = await _couponService.UpdateAsync(couponDTO);
+				if(responceDTO != null && !responceDTO.Success)
+					TempData["error"] = responceDTO.Message;
+				else
+					TempData["success"] = "Updated successfuly";
+			}
+			else
+			{
+				TempData["error"] = "Something wrong with model";
 			}
 			return RedirectToAction("Index");
 		}
 		public async Task<IActionResult> Delete(int id)
 		{
 			ResponceDTO? responceDTO = await _couponService.DeleteAsync(id);
+			TempData["success"] = "Deleted successfuly";
 			return RedirectToAction("Index");
 		}
 	}
