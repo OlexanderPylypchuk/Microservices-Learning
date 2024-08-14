@@ -1,0 +1,39 @@
+﻿@model RegistrationRequestDTO
+
+<form method="post">
+	<h1 class="m-3">Login</h1>
+	<div class="mb-3">
+		<label asp-for="Email"></label>
+		<input asp-for="Email" class="form-control" />
+		<span asp-validation-for="Email"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Name"></label>
+		<input asp-for="Name" class="form-control" />
+		<span asp-validation-for="Name"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="PhoneNumber"></label>
+		<input asp-for="PhoneNumber" class="form-control" />
+		<span asp-validation-for="PhoneNumber"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Password"></label>
+		<input asp-for="Password" class="form-control" />
+		<span asp-validation-for="Password"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Role"></label>
+		<select class="form-select" asp-for="Role" asp-items="ViewBag.RoleList"></select>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-8">
+			<button type="submit" class="btn btn-success">Continue</button>
+			<a asp-action="" class="btn btn-danger">Return</a>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

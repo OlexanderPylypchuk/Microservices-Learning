@@ -1,0 +1,25 @@
+﻿@model LoginRequestDTO
+
+<form method="post">
+	<h1 class="m-3">Login</h1>
+	<div class="mb-3">
+		<label asp-for="UserName"></label>
+		<input asp-for="UserName" class="form-control" />
+		<span asp-validation-for="UserName"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Password"></label>
+		<input type="password" asp-for="Password" class="form-control" />
+		<span asp-validation-for="Password"></span>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-8">
+			<button type="submit" class="btn btn-success">Continue</button>
+			<a asp-action="" class="btn btn-danger">Return</a>
+		</div>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
