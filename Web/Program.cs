@@ -11,12 +11,15 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<ICouponService,CouponService>();
 builder.Services.AddHttpClient<IAuthService,AuthService>();
+builder.Services.AddHttpClient<IProductService,ProductService>();
 SD.CouponApiBase = builder.Configuration["ServiceUlrs:CouponApi"];
 SD.AuthApiBase = builder.Configuration["ServiceUlrs:AuthApi"];
+SD.ProductApiBase = builder.Configuration["ServiceUlrs:ProductApi"];
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options=>
 {
 	options.ExpireTimeSpan = TimeSpan.FromHours(10);

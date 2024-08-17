@@ -10,7 +10,7 @@ using ProductAPI.Models.Dtos;
 
 namespace ProductAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/product")]
     [Authorize]
     [ApiController]
     public class ProductController : ControllerBase

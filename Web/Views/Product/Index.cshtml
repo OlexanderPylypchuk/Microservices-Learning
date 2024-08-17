@@ -1,0 +1,64 @@
+﻿@model List<ProductDTO>
+<div class="container m-0 p-0 card">
+	<div class="card-header">
+		<h1 class="text-center card-title">Coupon list</h1>
+	</div>
+
+	<div class=" card-body row justify-content-center">
+		<div class="col-lg-10">
+			<a asp-action="Create" class="btn btn-success float-none float-md-end  my-3">Create new coupon</a>
+			<table class="table bg-light rounded-3">
+				<thead>
+					<tr>
+						<th>
+							Id
+						</th>
+						<th>
+							Name
+						</th>
+						<th>
+							Description
+						</th>
+						<th>
+							Price
+						</th>
+						<th>
+							CategoryName
+						</th>
+						<th>
+
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model)
+					{
+						<tr>
+							<td>
+								@item.Id
+							</td>
+							<td>
+								@item.Name
+							</td>
+							<td>
+								@item.Description
+							</td>
+							<td>
+								@item.Price.ToString("c")
+							</td>
+							<td>
+								@item.CategoryName
+							</td>
+							<td>
+								<div class="btn-group" role="group" aria-label="update delete buttons">
+									<a asp-route-id="@item.Id" asp-action="Update" class="btn btn-primary">Update</a>
+									<a asp-route-id="@item.Id" asp-action="Delete" class="btn btn-danger">Delete</a>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
