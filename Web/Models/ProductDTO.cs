@@ -13,5 +13,6 @@ namespace Micro.Web.Models
         public string Description { get; set; }
         public string CategoryName { get; set; }
         public string? ImgUrl { get; set; }
-    }
+		public int Count { get; set; } = 1;
+	}
 }
