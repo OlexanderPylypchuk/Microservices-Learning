@@ -53,7 +53,7 @@ namespace Micro.Web.Service
         {
             return await _baseService.SendAsync(new RequestDTO
             {
-                Type = SD.ApiType.GET,
+                Type = SD.ApiType.PUT,
                 Data = productDTO,
                 Url = SD.ProductApiBase + "/api/product"
             });
