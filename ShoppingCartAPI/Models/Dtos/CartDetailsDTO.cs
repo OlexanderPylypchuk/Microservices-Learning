@@ -7,8 +7,8 @@ namespace ShoppingCartAPI.Models.Dtos
 	{
 		[Key]
 		public int Id { get; set; }
+		[ForeignKey(nameof(CartHeader))]
 		public int CartHeaderId { get; set; }
-		[ForeignKey(nameof(CartHeaderId))]
 		public CartHeader CartHeader { get; set; }
 		public int ProductId { get; set; }
 		[NotMapped]

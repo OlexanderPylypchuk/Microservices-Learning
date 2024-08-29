@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using ShoppingCartAPI.Models.Dtos;
 
 namespace ShoppingCartAPI.Models
@@ -8,8 +9,9 @@ namespace ShoppingCartAPI.Models
 	{
 		[Key]
 		public int Id { get; set; }
+		[ForeignKey(nameof(CartHeader))]
 		public int CartHeaderId { get; set; }
-		[ForeignKey(nameof(CartHeaderId))]
+		[ValidateNever]
 		public CartHeader CartHeader { get; set; }
 		public int ProductId { get; set; }
 		[NotMapped]
