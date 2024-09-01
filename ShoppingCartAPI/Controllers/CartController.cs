@@ -19,13 +19,15 @@ namespace ShoppingCartAPI.Controllers
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
 		private readonly IProductService _productService;
+		private readonly ICouponService _couponService;
 		protected ResponceDTO _responceDTO;
-		public CartController(ApplicationDbContext db,IMapper mapper, IProductService productService)
+		public CartController(ApplicationDbContext db,IMapper mapper, IProductService productService, ICouponService couponService)
 		{
 			_db = db;
 			_mapper = mapper;
 			_responceDTO = new ResponceDTO();
 			_productService = productService;
+			_couponService = couponService;
 		}
 		[HttpGet("getcart/{userid}")]
 		public async Task<ResponceDTO> GetCart(string userid)
@@ -36,6 +38,7 @@ namespace ShoppingCartAPI.Controllers
 				{
 					Header = _mapper.Map<CartHeaderDTO>(_db.Headers.First(u => u.UserId == userid))
 				};
+				
 				cart.Details = _mapper.Map<IEnumerable<CartDetailsDTO>>(_db.Details.Where(u=>u.CartHeaderId==cart.Header.Id).ToList());
 
 				IEnumerable<ProductDTO> productDTOs = await _productService.GetAllProductsAsync();
@@ -44,6 +47,17 @@ namespace ShoppingCartAPI.Controllers
 					item.ProductDto = productDTOs.FirstOrDefault(u => u.Id == item.ProductId);
 					cart.Header.CartTotal += item.Count * item.ProductDto.Price;
 				}
+
+				if (!string.IsNullOrEmpty(cart.Header.CouponCode))
+				{
+					var coupon = await _couponService.GetCoupon(cart.Header.CouponCode);
+					if (coupon != null && coupon.MinAmount<cart.Header.CartTotal)
+					{
+						cart.Header.Discount = coupon.DiscountAmount;
+						cart.Header.CartTotal -= coupon.DiscountAmount;
+					}
+				}
+
 				_responceDTO.Success = true;
 				_responceDTO.Result = cart;
 			}
@@ -51,6 +65,25 @@ namespace ShoppingCartAPI.Controllers
 			{
 				_responceDTO.Success = false;
 				_responceDTO.Message = ex.Message;
+			}
+			return _responceDTO;
+		}
+		[HttpPost("applycoupon")]
+		public async Task<ResponceDTO> ApplyCoupon([FromBody]CartDTO cart)
+		{
+			try
+			{
+				var cartheaderfromdb = _db.Headers.First(u => u.UserId == cart.Header.UserId);
+				cartheaderfromdb.CouponCode = cart.Header.CouponCode;
+				_db.Headers.Update(cartheaderfromdb);
+				await _db.SaveChangesAsync();
+				_responceDTO.Success = true;
+				_responceDTO.Result = cart;
+			}
+			catch (Exception ex)
+			{
+				_responceDTO.Success = false;
+				_responceDTO.Message=ex.Message;
 			}
 			return _responceDTO;
 		}

@@ -24,7 +24,6 @@ namespace Micro.Web.Service
 				HttpClient client = _httpClientFactory.CreateClient("CouponAPI");
 				HttpRequestMessage message = new();
 				message.Headers.Add("Accept", "application/json");
-				//Потім додам токени
 				if(withBearer)
 				{
 					var token = _tokenProvider.GetToken();
@@ -64,19 +63,19 @@ namespace Micro.Web.Service
 						return new ResponceDTO()
 						{
 							Success = false,
-							Message = "Not found"
+							Message = "Forbidden"
 						};
 					case HttpStatusCode.InternalServerError:
 						return new ResponceDTO()
 						{
 							Success = false,
-							Message = "Not found"
+							Message = "Internal server error"
 						};
 					case HttpStatusCode.Unauthorized:
 						return new ResponceDTO()
 						{
 							Success = false,
-							Message = "Not found"
+							Message = "Unauthorized"
 						};
 					default:
 						var content = await responseMessage.Content.ReadAsStringAsync();
