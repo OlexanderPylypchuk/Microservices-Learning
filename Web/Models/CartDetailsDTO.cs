@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShoppingCartAPI.Models.Dtos
+namespace Micro.Web.Models
 {
 	public class CartDetailsDTO
 	{

@@ -1,0 +1,31 @@
+﻿@model ProductDTO
+
+<form method="post">
+	<input asp-for="@Model.Id" hidden />
+	<div class="card">
+		<div class="card-header row m-0">
+			<h2 class="col-6">
+				@Model.Name
+			</h2>
+			<h2 class="col-6 text-end">
+				@Model.Price.ToString("c")
+			</h2>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-8">
+					<img src="@Model.ImgUrl" alt="Image for product" />
+				</div>
+				<div class="col-4">
+					<h2>@Model.Description</h2>
+					<h2>
+						<input asp-for="Count" class="form-control" />
+						<span asp-validation-for="Count" class="text-danger"></span>
+					</h2>
+				</div>
+			</div>
+			<button class="btn btn-success" type="submit" >Add to cart</button>
+			<a class="btn btn-info btn-outline-light" asp-action="Index">Return</a>
+		</div>
+	</div>
+</form>

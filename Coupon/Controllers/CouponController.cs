@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 using CouponAPI.Models;
 using CouponAPI.Models.Dto;
 using CouponAPIAPI.Data;

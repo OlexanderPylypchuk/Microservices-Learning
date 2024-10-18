@@ -1,0 +1,79 @@
+﻿@model CartDTO
+
+@if (Model.Header != null && Model.Details.Count() > 0)
+{
+	<form method="post">
+		<input asp-for="Header.UserId" hidden />
+		<input asp-for="Header.Id" hidden />
+		<input asp-for="Details" hidden />
+		<div class="container row justify-content-center">
+			<h2>
+				Your cart
+			</h2>
+			<h2>
+				Items:
+			</h2>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							Name
+						</th>
+						<th>
+							Quantity
+						</th>
+						<th>
+							Price
+						</th>
+						<th>
+
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.Details)
+					{
+						<tr>
+							<td>
+								@item.ProductDto.Name
+							</td>
+							<td>
+								@item.Count
+							</td>
+							<td>
+								@((item.ProductDto.Price * item.Count).ToString("c"))
+							</td>
+							<th>
+								<button class="btn btn-outline-danger" asp-action="Remove" asp-route-id="@item.Id">Remove</button>
+							</th>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<div class="col-6">
+				<span>Coupon:</span>
+				<input class="form-control" asp-for="Header.CouponCode" />
+				<button type="submit" class="btn btn-primary" asp-action="ApplyCoupon">Apply</button>
+				<button type="submit" class="btn btn-outline-danger" asp-action="RemoveCoupon">Remove coupon</button>
+			</div>
+
+
+			@if (Model.Header.Discount > 0)
+			{
+				<h3>
+					Discount: -@Model.Header.Discount.ToString("c")
+				</h3>
+			}
+			<h2>
+				Cart Total: @Model.Header.CartTotal.ToString("c")
+				<button type="submit" class="btn btn-primary" asp-action="EmailCart">Email cart</button>
+			</h2>
+		</div>
+	</form>
+}
+else
+{
+	<h1>
+		Please, add items to cart
+	</h1>
+}

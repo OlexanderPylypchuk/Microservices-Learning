@@ -1,5 +1,7 @@
 ﻿using System.Reflection.PortableExecutable;
 using AutoMapper;
+using Micro.MessageBus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,20 +16,26 @@ namespace ShoppingCartAPI.Controllers
 {
 	[Route("api/cart")]
 	[ApiController]
+	[Authorize]
 	public class CartController : ControllerBase
 	{
 		private readonly ApplicationDbContext _db;
 		private readonly IMapper _mapper;
 		private readonly IProductService _productService;
 		private readonly ICouponService _couponService;
+		private readonly IMessageBus _messageBus;
+		private readonly IConfiguration _configuration;
 		protected ResponceDTO _responceDTO;
-		public CartController(ApplicationDbContext db,IMapper mapper, IProductService productService, ICouponService couponService)
+		public CartController(ApplicationDbContext db,IMapper mapper, IProductService productService, ICouponService couponService,
+			IMessageBus messageBus, IConfiguration configuration)
 		{
 			_db = db;
 			_mapper = mapper;
 			_responceDTO = new ResponceDTO();
 			_productService = productService;
 			_couponService = couponService;
+			_messageBus = messageBus;
+			_configuration = configuration;
 		}
 		[HttpGet("getcart/{userid}")]
 		public async Task<ResponceDTO> GetCart(string userid)
@@ -87,6 +95,29 @@ namespace ShoppingCartAPI.Controllers
 			}
 			return _responceDTO;
 		}
+		[HttpPost("removecart")]
+		public async Task<ResponceDTO> RemoveCart([FromBody]int cartDetailsId)
+		{
+			try
+			{
+				var detailsfromdb = _db.Details.First(u=>u.Id == cartDetailsId);
+				
+				int cartCount = _db.Details.Count(u=>u.CartHeaderId == detailsfromdb.CartHeaderId);
+				_db.Details.Remove(detailsfromdb);
+				if(cartCount == 1)
+				{
+					var header = _db.Headers.First(u => u.Id == detailsfromdb.CartHeaderId);
+					_db.Headers.Remove(header);
+				}
+				await _db.SaveChangesAsync();
+				_responceDTO.Success = true;
+			}
+			catch (Exception ex)
+			{
+
+			}
+			return _responceDTO;
+		}
 		[HttpPost("cartupsert")]
 		public async Task<ResponceDTO> CartUpsert(CartDTO cartDTO)
 		{
@@ -96,7 +127,7 @@ namespace ShoppingCartAPI.Controllers
                 if (headerfromdb == null)
 				{
 					var cartHeader = _mapper.Map<CartHeader>(cartDTO.Header);
-					_db.Headers.Add(headerfromdb);
+					_db.Headers.Add(cartHeader);
 					await _db.SaveChangesAsync();
 					cartDTO.Details.First().CartHeaderId = cartHeader.Id;
 					_db.Details.Add(_mapper.Map<CartDetails>(cartDTO.Details.First()));
@@ -108,7 +139,6 @@ namespace ShoppingCartAPI.Controllers
 					if(detailsFromDb == null)
 					{
 						cartDTO.Details.First().CartHeaderId = headerfromdb.Id;
-						cartDTO.Details.First().CartHeader = headerfromdb;
 						_db.Details.Add(_mapper.Map<CartDetails>(cartDTO.Details.First()));
 						await _db.SaveChangesAsync();
 					}
@@ -122,6 +152,22 @@ namespace ShoppingCartAPI.Controllers
 				}
 				_responceDTO.Success = true;
 				_responceDTO.Result = cartDTO;
+			}
+			catch (Exception ex)
+			{
+				_responceDTO.Success = false;
+				_responceDTO.Message = ex.Message;
+			}
+			return _responceDTO;
+		}
+
+		[HttpPost("emailcartrequest")]
+		public async Task<ResponceDTO> EmailCartRequest([FromBody] CartDTO cartDTO)
+		{
+			try
+			{
+				await _messageBus.PublishMessage(cartDTO, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCart"));
+				_responceDTO.Success = true;
 			}
 			catch (Exception ex)
 			{

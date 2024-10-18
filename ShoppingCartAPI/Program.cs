@@ -1,5 +1,6 @@
 using System.Text;
 using AutoMapper;
+using Micro.MessageBus;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using ShoppingCartAPI;
 using ShoppingCartAPI.Data;
 using ShoppingCartAPI.Service;
 using ShoppingCartAPI.Service.IService;
+using ShoppingCartAPI.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,12 +48,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 IMapper mapper = MapperConfig.RegisterMaps().CreateMapper();
-builder.Services.AddHttpClient("Product", u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductApi"]));
-builder.Services.AddHttpClient("Coupon", u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponApi"]));
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<AuthenticationHttpClientHandler>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddHttpClient("Product", 
+	u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductApi"]))
+	.AddHttpMessageHandler<AuthenticationHttpClientHandler>();
+
+builder.Services.AddHttpClient("Coupon", 
+	u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponApi"]))
+	.AddHttpMessageHandler<AuthenticationHttpClientHandler>();
 
 var secret = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 var issuer = builder.Configuration.GetValue<string>("ApiSettings:Issuer");
