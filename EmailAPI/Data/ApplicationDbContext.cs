@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using EmailAPI.Models;
-namespace ShoppingCartAPI.Data
+namespace EmailAPI.Data
 {
 	public class ApplicationDbContext : DbContext
 	{
@@ -9,7 +9,7 @@ namespace ShoppingCartAPI.Data
         {
             
         }
-        public DbSet<EmailLogger> Headers { get; set; }
+        public DbSet<EmailLogger> EmailLogs { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
