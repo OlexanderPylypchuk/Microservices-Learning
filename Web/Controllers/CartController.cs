@@ -81,5 +81,10 @@ namespace Micro.Web.Controllers
 			}
 			return View();
 		}
+		[HttpPost]
+		public async Task<IActionResult> SubmitOrder()
+		{
+			return View();
+		}
 	}
 }

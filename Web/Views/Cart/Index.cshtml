@@ -68,6 +68,11 @@
 				Cart Total: @Model.Header.CartTotal.ToString("c")
 				<button type="submit" class="btn btn-primary" asp-action="EmailCart">Email cart</button>
 			</h2>
+			<div class="justify-content-end">
+				<button asp-action="SubmitOrder" class="btn btn-success me-2">
+					Order Now!!!
+				</button>
+			</div>
 		</div>
 	</form>
 }

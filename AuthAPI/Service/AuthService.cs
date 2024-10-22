@@ -2,6 +2,7 @@
 using AuthAPI.Models;
 using AuthAPI.Models.Dtos;
 using AuthAPI.Service.IService;
+using Micro.MessageBus;
 using Microsoft.AspNetCore.Identity;
 
 namespace AuthAPI.Service
@@ -12,12 +13,17 @@ namespace AuthAPI.Service
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        public AuthService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IJwtTokenGenerator jwtTokenGenerator)
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
+        public AuthService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
+            IJwtTokenGenerator jwtTokenGenerator, IMessageBus messageBus, IConfiguration configuration)
         {
             _db = db;
             _userManager = userManager; 
             _roleManager = roleManager;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
         public async Task<LoginResponceDTO> Login(LoginRequestDTO loginrequestDTO)
         {
@@ -67,7 +73,8 @@ namespace AuthAPI.Service
                 if (result.Succeeded)
                 {
                     var user = _db.Users.Where(u=>u.Email==registrationrequestDTO.Email).FirstOrDefault();
-                    UserDTO userDTO = new()
+                    await _messageBus.PublishMessage(user.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegister"));
+					UserDTO userDTO = new()
                     {
                         Email = user.Email,
                         Id = user.Id,

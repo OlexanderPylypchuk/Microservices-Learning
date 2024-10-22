@@ -40,6 +40,12 @@ namespace EmailAPI.Services
 			await LogAndEmail(message.ToString(), cart.Header.Email);
 		}
 
+		public async Task EmailRegisterAndLog(string email)
+		{
+			string message = "your email: " + email;
+			await LogAndEmail(message, "admin@gmail.com");
+		}
+
 		public async Task<bool> LogAndEmail(string message, string email)
 		{
 			try
@@ -50,17 +56,6 @@ namespace EmailAPI.Services
 					Message = message,
 					EmailSent = DateTime.Now
 				};
-				var client = new SmtpClient()
-				{
-					EnableSsl = true,
-					Credentials = new NetworkCredential(SenderEmail, Password)
-				};
-				await client.SendMailAsync(new MailMessage(
-					from: SenderEmail,
-					to: email,
-					subject: "Your cart",
-					body: message.ToString()
-					));
 				await using var _db = new ApplicationDbContext(_dbContextOptions);
 				_db.EmailLogs.Add(emailLogger);
 				await _db.SaveChangesAsync();
