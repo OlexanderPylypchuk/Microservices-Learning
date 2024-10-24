@@ -1,0 +1,87 @@
+﻿@model CartDTO
+
+<form method="post">
+	<div class="card">
+		<div class="card-header">
+			<div class="row">
+				<div class="col-6">
+					<p class="text-danger">Order Summary</p>
+				</div>
+				<div class="col-6 justify-content-end">
+					<button asp-action="Index" class="btn btn-danger w-100">
+						Return to cart
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+			<div class="row">
+				<div class="col-6">
+					<label asp-for="Header.FirstName"></label>
+					<input asp-for="Header.FirstName" class="form-control" />
+					<span asp-validation-for="Header.FirstName"></span>
+
+					<label asp-for="Header.LastName"></label>
+					<input asp-for="Header.LastName" class="form-control" />
+					<span asp-validation-for="Header.LastName"></span>
+
+					<label asp-for="Header.Email"></label>
+					<input asp-for="Header.Email" class="form-control" />
+					<span asp-validation-for="Header.Email"></span>
+
+					<label asp-for="Header.PhoneNumber"></label>
+					<input asp-for="Header.PhoneNumber" class="form-control" />
+					<span asp-validation-for="Header.PhoneNumber"></span>
+				</div>
+				<div class="col-6">
+					<table class="table border-1 border">
+						<thead>
+							<tr>
+								<th>
+									Name
+								</th>
+								<th>
+									Quantity
+								</th>
+								<th>
+									Price
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Details)
+							{
+								<tr>
+									<td>
+										@item.ProductDto.Name
+									</td>
+									<td>
+										@item.Count
+									</td>
+									<td>
+										@((item.ProductDto.Price * item.Count).ToString("c"))
+									</td>
+								</tr>
+							}
+						</tbody>
+						<tfoot>
+							<tr class="justify-content-center">
+								<td class="justify-content-center">
+									<p class="text-info">Discount: @(Model.Header.Discount.ToString("c"))</p>
+								</td>
+								<td class="justify-content-center">
+									<p class="text-info">Final price: @(Model.Header.CartTotal.ToString("c"))</p>
+								</td>
+								<td class="justify-content-center">
+									<button asp-action="Checkout" type="submit" class="btn btn-success w-100">
+										Submit
+									</button>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -32,7 +32,8 @@ namespace Micro.Web.Controllers
 			return View();
 		}
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         public async Task<IActionResult> ApplyCoupon(CartDTO cartDTO)
         {
 			var responce = await _cartService.AddCoupon(cartDTO);
@@ -43,6 +44,7 @@ namespace Micro.Web.Controllers
 			return View();
 		}
 
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> RemoveCoupon(CartDTO cartDTO)
 		{
@@ -68,6 +70,7 @@ namespace Micro.Web.Controllers
             return new CartDTO();
         }
 
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> EmailCart()
 		{
@@ -81,10 +84,12 @@ namespace Micro.Web.Controllers
 			}
 			return View();
 		}
-		[HttpPost]
-		public async Task<IActionResult> SubmitOrder()
+
+		[Authorize]
+		public async Task<IActionResult> Checkout()
 		{
-			return View();
+			var CartDto = await GetCartForLoggedUser();
+			return View(CartDto);
 		}
 	}
 }
