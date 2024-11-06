@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Azure.Messaging.ServiceBus;
 using EmailAPI.Models.Dto;
+using EmailAPI.Models.DTOs;
 using EmailAPI.Services.IServices;
 using Newtonsoft.Json;
 
@@ -11,11 +12,14 @@ namespace EmailAPI.Messaging
         private readonly string _serviceBusConnectionString;
         private readonly string _emailCartQueue;
         private readonly string _emailRegisterQueue;
-        private readonly IConfiguration _configuration;
+		private readonly string _orderCreatedTopic;
+		private readonly string _orderCreatedRewardsEmailSubscription;
+		private readonly IConfiguration _configuration;
         private readonly IEmailSender _emailSender;
 
         private ServiceBusProcessor _emailCartProcessor; 
         private ServiceBusProcessor _emailRegisterProcessor;
+		private ServiceBusProcessor _orderCreatedProcessor;
 
         public AzureServiceBusConsumer(IConfiguration configuration, IEmailSender emailSender)
         {
@@ -25,11 +29,14 @@ namespace EmailAPI.Messaging
 
             _emailCartQueue = _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue");
             _emailRegisterQueue = _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisterQueue");
+			_orderCreatedTopic = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+			_orderCreatedRewardsEmailSubscription = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreated_Email_Subscription");
 
 			var client = new ServiceBusClient(_serviceBusConnectionString);
 
             _emailCartProcessor = client.CreateProcessor(_emailCartQueue);
 			_emailRegisterProcessor = client.CreateProcessor(_emailRegisterQueue);
+			_orderCreatedProcessor = client.CreateProcessor(_orderCreatedTopic, _orderCreatedRewardsEmailSubscription);
 
 			_emailSender = emailSender;
         }
@@ -68,6 +75,23 @@ namespace EmailAPI.Messaging
 			}
 		}
 
+		private async Task OnOrderCreatedRecieved(ProcessMessageEventArgs args)
+		{
+			var message = args.Message;
+			var body = UTF8Encoding.UTF8.GetString(message.Body);
+
+			RewardsDTO rewardsDTO = JsonConvert.DeserializeObject<RewardsDTO>(body);
+			try
+			{
+				await _emailSender.LogOrderPlaced(rewardsDTO);
+				await args.CompleteMessageAsync(args.Message);
+			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+		}
+
 		private Task ErrorHandler(ProcessErrorEventArgs args)
         {
             Console.WriteLine(args.Exception.ToString());
@@ -85,6 +109,11 @@ namespace EmailAPI.Messaging
 			_emailRegisterProcessor.ProcessErrorAsync += ErrorHandler;
 
 			await _emailRegisterProcessor.StartProcessingAsync();
+
+			_orderCreatedProcessor.ProcessMessageAsync += OnOrderCreatedRecieved;
+			_orderCreatedProcessor.ProcessErrorAsync += ErrorHandler;
+
+			await _orderCreatedProcessor.StartProcessingAsync();
 		}
 
 		public async Task Stop()
@@ -94,6 +123,9 @@ namespace EmailAPI.Messaging
 
 			await _emailRegisterProcessor.StopProcessingAsync();
 			await _emailRegisterProcessor.DisposeAsync();
+
+			await _orderCreatedProcessor.StopProcessingAsync();
+			await _orderCreatedProcessor.DisposeAsync();
 		}
 	}
 }

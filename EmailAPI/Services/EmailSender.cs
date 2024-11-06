@@ -4,6 +4,7 @@ using System.Text;
 using EmailAPI.Data;
 using EmailAPI.Models;
 using EmailAPI.Models.Dto;
+using EmailAPI.Models.DTOs;
 using EmailAPI.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,6 +66,12 @@ namespace EmailAPI.Services
 			{
 				return false;
 			}
+		}
+
+		public async Task LogOrderPlaced(RewardsDTO rewardsDTO)
+		{
+			string message = "New Order placed, ID: " + rewardsDTO.OrderId;
+			await LogAndEmail(message, "admin@gmail.com");
 		}
 	}
 }

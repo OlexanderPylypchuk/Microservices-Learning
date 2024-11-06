@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using RewardAPI.Data;
+using RewardAPI.Messaging;
+using RewardAPI.Services;
+using RewardAPI.Services.IServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+dbContextOptionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddSingleton<IRewardService>(new RewardService(dbContextOptionsBuilder.Options));
+
+
+builder.Services.AddScoped<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 var app = builder.Build();
 

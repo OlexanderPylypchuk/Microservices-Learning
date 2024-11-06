@@ -10,7 +10,7 @@ namespace RewardAPI.Services
 	{
 		private DbContextOptions<ApplicationDbContext> _dbContextOptions;
 
-		public RewardService(DbContextOptions<ApplicationDbContext> dbContextOptions, IConfiguration configuration)
+		public RewardService(DbContextOptions<ApplicationDbContext> dbContextOptions)
 		{
 			_dbContextOptions = dbContextOptions;
 		}
