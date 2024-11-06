@@ -10,10 +10,12 @@ namespace Micro.Web.Controllers
 	public class CartController : Controller
 	{
 		private readonly IShoppingCartService _cartService;
+		private readonly IOrderService _orderService;
 
-        public CartController(IShoppingCartService cartService)
+        public CartController(IShoppingCartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+			_orderService = orderService;
         }
 
         [Authorize]
@@ -90,6 +92,28 @@ namespace Micro.Web.Controllers
 		{
 			var CartDto = await GetCartForLoggedUser();
 			return View(CartDto);
+		}
+
+		[HttpPost]
+		[ActionName("Checkout")]
+		public async Task<IActionResult> Checkout(CartDTO cartDTO)
+		{
+			CartDTO cart = await GetCartForLoggedUser();
+			cart.Header.Email = cartDTO.Header.Email;
+			cart.Header.PhoneNumber = cartDTO.Header.PhoneNumber;
+			cart.Header.FirstName = cartDTO.Header.FirstName;
+			cart.Header.LastName = cartDTO.Header.LastName;
+
+			ResponceDTO responce = await _orderService.CreateOrderAsync(cart);
+
+			OrderHeaderDTO orderHeaderDTO = JsonConvert.DeserializeObject<OrderHeaderDTO>(Convert.ToString(responce.Result));
+
+			if(responce != null && responce.Success)
+			{
+				//Тут має бути спосіб оплати, але я не відкрив ФОП і тому нічого тут не буде XD
+			}
+
+			return RedirectToAction(nameof(Index));
 		}
 	}
 }

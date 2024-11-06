@@ -7,6 +7,7 @@ using OrderAPI;
 using OrderAPI.Utility;
 using OrderAPI.Data;
 using Microsoft.IdentityModel.Tokens;
+using Micro.MessageBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +46,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 IMapper mapper = MapperConfig.RegisterMaps().CreateMapper();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

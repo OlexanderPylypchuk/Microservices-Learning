@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OrderAPI.Models.DTOs
+namespace Micro.Web.Models
 {
 	public class OrderDetailsDTO
 	{

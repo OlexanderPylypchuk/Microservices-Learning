@@ -6,6 +6,7 @@
 		public static string AuthApiBase { get; set; }
         public static string ProductApiBase { get; set; }
 		public static string ShoppingCartApiBase { get; set; }
+		public static string OrderApiBase { get; set; }
 		public static string RoleAdmin = "ADMIN";
 		public static string RoleCustomer = "CUSTOMER";
 		public static string TokenCookie = "JwtToken";

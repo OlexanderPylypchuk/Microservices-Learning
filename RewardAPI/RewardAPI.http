@@ -1,0 +1,6 @@
+@RewardAPI_HostAddress = http://localhost:5240
+
+GET {{RewardAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
