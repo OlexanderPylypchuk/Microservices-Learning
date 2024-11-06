@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /MessageBus/MessageBus.cs
 /EmailAPI/appsettings.json
+/RewardAPI/appsettings.json
